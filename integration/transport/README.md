@@ -2,19 +2,19 @@
 
 # Run
 
+Run the following command in the root directory of the project:
 `python3 -m integration.transport.transport`
 
 # Test
 
+Run the following command in the root directory of the project:
 `$ python3 -m unittest integration.transport.tests`
 
 # Open Questions
 
 ## TAM
 
-## Is the TAM a function of the scenario?
-
-Example telepresence
+Is the TAM a function of the scenario? --> Example telepresence
 
 ## How to model the prioritization of the solutions in the integration scenario
 
