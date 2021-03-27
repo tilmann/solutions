@@ -1,5 +1,9 @@
 # Open Questions
 
+## TAM
+
+Is the TAM a function of the scenario. Example telepresence
+
 ## How to model the prioritization of the solutions in the integration scenario
 
 --> Transportation Integration Process - Figure 3

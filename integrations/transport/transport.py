@@ -44,10 +44,8 @@ for s, i in zip(PDS_scenarios, range(1, 4)):
 # airplanes = solutions_dict["airplanes"][0]()
 # hybridcars = solutions_dict["hybridcars"][0]()
 
-# print(solutions_dict["trucks"])
-# print(solutions_dict["trains"])
-# print(solutions_dict["ships"])
 
+# copied from excel
 baseline_values = [[111304101], [114809282], [119293206], [121312310], [125320334], [130995519], [135887669], [139263493], [143439617], [149227058], [154566203], [160166726], [166046016], [172231911], [178710364], [185530068], [192697916], [200231267], [206140575], [216463901], [225197889], [234366816], [243988062], [254040124], [264657000], [275739405], [287343597], [299486959], [313232199], [325460675], [339325731], [353799349], [368898825], [384653303], [401044573], [418125492], [435901525], [454389978], [473476431], [493573367], [514302927], [535814049], [558123920], [581249753], [605208827], [630018479], [655696059], [682258946], [709724529]]
 
 baseline_df = pd.DataFrame(baseline_values, columns=['Average of Baseline TAMs'], index=range(2012, 2061))
@@ -83,13 +81,6 @@ def freight_adoption(scenarios):
 
   df = df[['Average of Baseline TAMs', 'Remaining mtonne-kms', 'Remaining %', 'Trucks', 'Trucks %', 'Ships', 'Ships %', 'Trains', 'Trains %']]
   return df
-
-# Input Data needs to be confirmed by Ryan
-# freight_results = freight_adoption(baseline_df, ship_vals, truck_vals, train_vals)
-  
-# print(freight_results.tail())
-
-
 
 def nonurban_pass_adoption(baseline, telepresence, trains, aviation, electricvehicles, fuel_efficiency):
   
