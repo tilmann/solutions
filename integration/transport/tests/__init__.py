@@ -15,18 +15,33 @@ def test_dataframe(tested, expected):
 class TestTransport(unittest.TestCase):
 
     def test_transport_urban_pass(self):
-        # expected_df = pd.read_csv(
-        #        'integration/transport/tests/expected_urban_pass.csv', header=None, sep=';')
+        expected_df = pd.read_csv(
+                'integration/transport/tests/expected_nonurban_pass.csv', header=None, index_col=0)
+
         test_pds1_df = transport.nonurban_pass_adoption('pds1')
-
         self.assertIsInstance(test_pds1_df, pd.DataFrame)
-
+        print('⚠️ Only asserts that it return a valid dataframe')
         # self.assertIsNone(test_dataframe(
-        #    test_pds1_df.iloc[:, 0:2], expected_df.iloc[0:49, 0:2]))
+        #         test_pds1_df.iloc[:, 0:13], expected_df.iloc[0:49, 0:13]))
+
+        test_pds2_df = transport.nonurban_pass_adoption('pds2')
+        self.assertIsInstance(test_pds2_df, pd.DataFrame)
+        print('⚠️ Only asserts that it return a valid dataframe')
+        # TODO assert the test_dataframe for pds2
+        # currently the df is exported for the
+        # self.assertIsNone(test_dataframe(
+        #        test_pds1_df.iloc[:, 0:13], expected_df.iloc[49:98, 0:13]))
+
+        test_pds3_df = transport.nonurban_pass_adoption('pds3')
+        self.assertIsInstance(test_pds3_df, pd.DataFrame)
+        print('⚠️ Only asserts that it return a valid dataframe')
+        # TODO assert the test_dataframe for pds3
+        # self.assertIsNone(test_dataframe(
+        #        test_pds1_df.iloc[:, 0:13], expected_df.iloc[98:147, 0:13]))
 
     def test_transport_freight_adoption(self):
         expected_df = pd.read_csv(
-                'integration/transport/tests/expected_freight_adoption.csv', header=None, sep=';')
+                'integration/transport/tests/expected_freight_adoption.csv', header=None)
 
         test_pds1_df = transport.freight_adoption('pds1')
         self.assertIsNone(test_dataframe(
