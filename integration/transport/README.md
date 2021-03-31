@@ -3,12 +3,14 @@
 # Run
 
 Run the following command in the root directory of the project:
-`python3 -m integration.transport.transport`
+`$ python3 -m integration.transport.transport`
 
 # Test
 
 Run the following command in the root directory of the project:
 `$ python3 -m unittest integration.transport.tests`
+
+# Learnings
 
 # Open Questions
 
