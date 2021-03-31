@@ -1,8 +1,8 @@
 import pandas as pd
 from solution import factory
 
-# "trucks", "trains", "ships", "telepresence", "electricvehicles", "airplanes", "hybridcars"
-solutions_list = ["trucks", "trains", "ships"]
+solutions_list = ["trucks", "trains", "ships", "telepresence",
+    "electricvehicles", "airplanes", "hybridcars"]
 solutions_dict = {}
 for s in solutions_list:
     solutions_dict[s] = factory.one_solution_scenarios(s)
@@ -42,12 +42,12 @@ def freight_adoption(scenario):
     ships = solutions_dict["ships"][0](scenarios_dict[scenario]['ships'])
     trains = solutions_dict["trains"][0](scenarios_dict[scenario]['trains'])
 
-    ship_vals = ships.ht.pds_adoption_data_per_region['World']
-    truck_vals = trucks.ht.pds_adoption_data_per_region['World']
-    train_vals = trains.ht.pds_adoption_data_per_region['World']
+    ships_vals = ships.ht.pds_adoption_data_per_region['World']
+    trucks_vals = trucks.ht.pds_adoption_data_per_region['World']
+    trains_vals = trains.ht.pds_adoption_data_per_region['World']
 
     df = pd.concat(
-            [baseline_df, truck_vals, ship_vals, train_vals], axis=1)
+            [baseline_df, trucks_vals, ships_vals, trains_vals], axis=1)
 
     df.columns = ['Average of Baseline TAMs', 'Trucks', 'Ships', 'Trains']
     df['Trucks %'] = df['Trucks'] / df['Average of Baseline TAMs']
@@ -90,18 +90,61 @@ def freight_adoption(scenario):
 # electricvehicles_vals = electricvehicles.ht.pds_adoption_data_per_region['World']
 # telepresence_vals = telepresence.ht.pds_adoption_data_per_region['World']
 # airplanes_vals = airplanes.ht.pds_adoption_data_per_region['World']
-# fuel_efficiency_vals = hybridcars.ht.pds_adoption_data_per_region['World']
+# hybridcars_vals = hybridcars.ht.pds_adoption_data_per_region['World']
 
-def nonurban_pass_adoption(baseline, telepresence, trains, aviation, electricvehicles, fuel_efficiency):
+def nonurban_pass_adoption(scenario):
 
-    df = pd.concat([baseline, telepresence, trains, aviation,
-                   electricvehicles, fuel_efficiency], axis=1)
+    scenarios_dict = {
+            # plausible
+            'pds1': {
+                'telepresence': 'PDS1-20p2050-Bass Curve Fit',
+                'trains': 'PDS1-5p2050-with UIC Electrification Rate',
+                'airplanes': 'PDS1-80p2050-13.2%Efficiency',
+                'electricvehicles': 'PDS1-16p2050-using IEA 2DS (Pre-Integration)',
+                'hybridcars': 'PDS1-11p2050-using IEA 2DS (Pre-Integration)',
+            },
+            # drawdown
+            'pds2': {
+                'telepresence': 'PDS2-28p2050-Bass Curve Fit',
+                'trains': 'PDS2-5p2050-based on on IEA 2DS (Book Ed.1)',
+                'airplanes': 'PDS2-85p2050-18%Efficiency',
+                'electricvehicles': 'PDS2-23p2050-using IEA B2DS (Pre-Integration)',
+                'hybridcars': 'PDS2-4p2050-Transition to EVs (Pre-Integration)',
+            },
+            # optimum
+            'pds3': {
+                'telepresence': 'PDS3-46p2050-Bass Curve Fit',
+                'trains': 'PDS3-9p2050-Complete Electrification',
+                'airplanes': 'PDS3-100p2050-20%Efficiency',
+                'electricvehicles': 'PDS3-18p2050-Car Survival Analysis (Pre-Integration)',
+                'hybridcars': 'PPDS3-1p2050-Transition to EVs (Pre-Integration)',
+            }
+    }
+
+    telepresence = solutions_dict["telepresence"][0](
+        scenarios_dict[scenario]['telepresence'])
+    trains = solutions_dict["trains"][0](scenarios_dict[scenario]['trains'])
+    airplanes = solutions_dict["airplanes"][0](
+        scenarios_dict[scenario]['airplanes'])
+    electricvehicles = solutions_dict["electricvehicles"][0](
+        scenarios_dict[scenario]['electricvehicles'])
+    hybridcars = solutions_dict["hybridcars"][0](
+        scenarios_dict[scenario]['hybridcars'])
+
+    telepresence_vals = telepresence.ht.pds_adoption_data_per_region['World']
+    trains_vals = trains.ht.pds_adoption_data_per_region['World']
+    airplanes_vals = airplanes.ht.pds_adoption_data_per_region['World']
+    electricvehicles_vals = electricvehicles.ht.pds_adoption_data_per_region['World']
+    hybridcars_vals = hybridcars.ht.pds_adoption_data_per_region['World']
+
+    df = pd.concat([baseline_df, telepresence_vals, trains_vals, airplanes_vals,
+                   electricvehicles_vals, hybridcars_vals], axis=1)
     df.columns = ['Average of Baseline TAMs', 'Telepresence', 'High Speed Rail',
-        'Efficient Aviation', 'Electric Vehicles', 'Car Fuel Efficiency']
+        'Efficient airplanes', 'Electric Vehicles', 'Car Fuel Efficiency']
     df['Telepresence %'] = df['Telepresence'] / df['Average of Baseline TAMs']
     df['High Speed Rail %'] = df['High Speed Rail'] / \
         df['Average of Baseline TAMs']
-    df['Efficient Aviation %'] = df['Efficient Aviation'] / \
+    df['Efficient airplanes %'] = df['Efficient airplanes'] / \
         df['Average of Baseline TAMs']
     df['Electric Vehicles %'] = df['Electric Vehicles'] / \
         df['Average of Baseline TAMs']
@@ -109,15 +152,15 @@ def nonurban_pass_adoption(baseline, telepresence, trains, aviation, electricveh
         df['Average of Baseline TAMs']
 
     df['Remaining mtonne-kms'] = df['Average of Baseline TAMs'] - df['Telepresence'] - \
-        df['High Speed Rail'] - df['Efficient Aviation'] - \
+        df['High Speed Rail'] - df['Efficient airplanes'] - \
         df['Electric Vehicles'] - df['Car Fuel Efficiency']
     df['Remaining %'] = df['Remaining mtonne-kms'] / \
         df['Average of Baseline TAMs']
 
     df = df[['Average of Baseline TAMs', 'Remaining mtonne-kms', 'Remaining %', 'Telepresence', 'Telepresence %', 'High Speed Rail', 'High Speed Rail %',
-      'Efficient Aviation', 'Efficient Aviation %', 'Electric Vehicles', 'Electric Vehicles %', 'Car Fuel Efficiency', 'Car Fuel Efficiency %']]
+      'Efficient airplanes', 'Efficient airplanes %', 'Electric Vehicles', 'Electric Vehicles %', 'Car Fuel Efficiency', 'Car Fuel Efficiency %']]
     return df
 
-# nonurban_pass_adoption_results = nonurban_pass_adoption(baseline_df, telepresence_vals, train_vals, airplanes_vals, electricvehicles_vals, fuel_efficiency_vals)
+# nonurban_pass_adoption_results = nonurban_pass_adoption(baseline_df, telepresence_vals, train_vals, airplanes_vals, electricvehicles_vals, hybridcars_vals)
 
 # print(nonurban_pass_adoption_results.tail())

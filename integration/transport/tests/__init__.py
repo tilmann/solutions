@@ -14,7 +14,17 @@ def test_dataframe(tested, expected):
 
 class TestTransport(unittest.TestCase):
 
-    def test_transport(self):
+    def test_transport_urban_pass(self):
+        # expected_df = pd.read_csv(
+        #        'integration/transport/tests/expected_urban_pass.csv', header=None, sep=';')
+        test_pds1_df = transport.nonurban_pass_adoption('pds1')
+
+        self.assertIsInstance(test_pds1_df, pd.DataFrame)
+
+        # self.assertIsNone(test_dataframe(
+        #    test_pds1_df.iloc[:, 0:2], expected_df.iloc[0:49, 0:2]))
+
+    def test_transport_freight_adoption(self):
         expected_df = pd.read_csv(
                 'integration/transport/tests/expected_freight_adoption.csv', header=None, sep=';')
 
