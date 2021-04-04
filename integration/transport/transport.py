@@ -15,8 +15,8 @@ baseline_freight_df = pd.DataFrame(baseline_values_freight, columns=[
                            'Average of Baseline TAMs'], index=range(2012, 2061))
 
 # copied from excel
-baseline_values_nonurban = [
-    [23.944e+11], [24.731e+11], [25.633e+11], [26.368e+11], [27.348e+11], [28.227e+11], [29.121e+11], [30.029e+11], [31.242e+11], [31.891e+11], [32.844e+11], [33.814e+11], [34.800e+11], [35.904e+11], [36.821e+11], [37.858e+11], [38.912e+11], [39.984e+11], [41.071e+11], [42.183e+11], [43.311e+11], [44.458e+11], [45.626e+11], [46.661e+11], [48.021e+11], [49.250e+11], [50.500e+11], [51.772e+11], [52.996e+11], [54.382e+11], [55.722e+11], [57.084e+11], [58.470e+11], [59.970e+11], [61.314e+11], [62.772e+11], [64.255e+11], [65.762e+11], [67.293e+11], [68.854e+11], [70.439e+11], [72.050e+11], [73.687e+11], [75.350e+11], [77.040e+11], [78.757e+11], [80.501e+11], [82.273e+11], [84.073e+11]]
+baseline_values_nonurban = [[23943.64424], [24731.13681], [25632.8198], [26367.58211], [27347.95806], [28227.05545], [29120.75615], [30029.15318], [31242.43199], [31890.71249], [32844.48161], [33814.04634], [34799.80151], [35904.38986], [36821.36895], [37857.82772], [38911.86376], [39983.84117], [41070.68283], [42183.07326], [43311.04566], [44458.4265], [45625.61], [46660.52451], [
+    48020.9244], [49249.78991], [50499.97653], [51771.88476], [52995.93906], [54382.4083], [55721.74792], [57084.24055], [58470.18028], [59970.38757], [61313.61043], [62771.7485], [64254.58349], [65762.41404], [67292.90359], [68854.2581], [70438.88122], [72049.58896], [73686.5207], [75349.85195], [77039.83972], [78756.81676], [80501.12936], [82273.16715], [84073.32761]]
 
 baseline_nonurban_df = pd.DataFrame(baseline_values_nonurban, columns=[
                            'Average of Baseline TAMs'], index=range(2012, 2061))
@@ -147,21 +147,29 @@ def nonurban_pass_adoption(scenario="pds1", include_telepresence=True, include_t
         scenarios_dict[scenario]['hybridcars'])
 
     telepresence_vals = telepresence.ht.pds_adoption_data_per_region['World']
-    trains_vals = trains.ht.pds_adoption_data_per_region['World']
     # TODO Figure out why the solutions output need a factor
-    trains_vals = trains_vals * 100000
-    airplanes_vals = airplanes.ht.pds_adoption_data_per_region['World']
+
+    telepresence_vals = telepresence_vals / 1000000000
+
+    trains_vals = trains.ht.pds_adoption_data_per_region['World']
     # TODO see above
-    airplanes_vals = airplanes_vals * 1000000000
+    trains_vals = trains_vals / 10000
+
+    airplanes_vals = airplanes.ht.pds_adoption_data_per_region['World']
+
     electricvehicles_vals = electricvehicles.ht.pds_adoption_data_per_region['World']
     # TODO see above
-    electricvehicles_vals = electricvehicles_vals * 100000000
+    electricvehicles_vals = electricvehicles_vals / 10
+
     hybridcars_vals = hybridcars.ht.pds_adoption_data_per_region['World']
+    # TODO see above
+    hybridcars_vals = hybridcars_vals / 1000000000
 
     df = pd.concat([baseline_nonurban_df, telepresence_vals, trains_vals, airplanes_vals,
                    electricvehicles_vals, hybridcars_vals], axis=1)
     df.columns = ['Average of Baseline TAMs', 'Telepresence', 'High Speed Rail',
         'Efficient Airplanes', 'Electric Vehicles', 'Car Fuel Efficiency']
+
     df['Telepresence %'] = df['Telepresence'] / df['Average of Baseline TAMs']
     df['High Speed Rail %'] = df['High Speed Rail'] / \
         df['Average of Baseline TAMs']
@@ -197,6 +205,6 @@ def nonurban_pass_adoption(scenario="pds1", include_telepresence=True, include_t
     df = df[['Average of Baseline TAMs', 'Remaining mtonne-kms', 'Remaining %', 'Telepresence', 'Telepresence %', 'High Speed Rail', 'High Speed Rail %',
       'Efficient Airplanes', 'Efficient Airplanes %', 'Electric Vehicles', 'Electric Vehicles %', 'Car Fuel Efficiency', 'Car Fuel Efficiency %']]
 
-    #print(df.iloc[0:5, 0:3])
+    #print(df.iloc[0:5, 6:10])
 
     return df

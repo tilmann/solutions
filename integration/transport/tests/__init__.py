@@ -6,17 +6,19 @@ from integration.transport import transport
 
 
 def test_dataframe(tested, expected):
+
     tested = tested.reset_index(drop=True).T.reset_index(drop=True)
     expected = expected.reset_index(
             drop=True).T.reset_index(drop=True).astype(float)
-    pd.testing.assert_frame_equal(tested, expected, check_exact=False)
+    pd.testing.assert_frame_equal(
+        tested, expected, check_exact=False, rtol=1e-2)
 
 
 class TestTransport(unittest.TestCase):
 
     def test_transport_urban_pass(self):
         expected_df = pd.read_csv(
-                'integration/transport/tests/expected_nonurban_pass.csv', header=None, index_col=0)
+                'integration/transport/tests/expected_nonurban_pass_pds3.csv', header=None)
 
         test_pds1_df = transport.nonurban_pass_adoption('pds1')
         self.assertIsInstance(test_pds1_df, pd.DataFrame)
@@ -34,10 +36,14 @@ class TestTransport(unittest.TestCase):
 
         test_pds3_df = transport.nonurban_pass_adoption('pds3')
         self.assertIsInstance(test_pds3_df, pd.DataFrame)
-        print('⚠️ Only asserts that it return a valid dataframe')
-        # TODO assert the test_dataframe for pds3
+
+        # Test the percentages and data from scenario
+        self.assertIsNone(test_dataframe(
+                   test_pds3_df.iloc[0:49, 3:13], expected_df.iloc[0:49, 3:13]))
+
+        # TODO Test the calculations for the first three columnos
         # self.assertIsNone(test_dataframe(
-        #        test_pds1_df.iloc[:, 0:13], expected_df.iloc[98:147, 0:13]))
+        #           test_pds3_df.iloc[3:49, 0:3], expected_df.iloc[3:49, 0:3]))
 
     def test_transport_freight_adoption(self):
         expected_df = pd.read_csv(
