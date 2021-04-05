@@ -197,7 +197,8 @@ def nonurban_pass_adoption(scenario="pds1", include_telepresence=True, include_t
         df['Telepresence'] - df['High Speed Rail'] - \
         df['Electric Vehicles'] - df['Car Fuel Efficiency'] - \
         (df['Average of Baseline TAMs'] * (modeshare[0] +
-        modeshare[1] + max(df['Efficient Airplanes %'], modeshare[2])))
+        modeshare[1] +
+            df['Efficient Airplanes %'].map(lambda x: max(x, modeshare[2]))))
     # modeshare[1] + modeshare[2]))
 
     df['Remaining %'] = df['Remaining mtonne-kms'] / \
@@ -206,6 +207,6 @@ def nonurban_pass_adoption(scenario="pds1", include_telepresence=True, include_t
     df = df[['Average of Baseline TAMs', 'Remaining mtonne-kms', 'Remaining %', 'Telepresence', 'Telepresence %', 'High Speed Rail', 'High Speed Rail %',
       'Efficient Airplanes', 'Efficient Airplanes %', 'Electric Vehicles', 'Electric Vehicles %', 'Car Fuel Efficiency', 'Car Fuel Efficiency %']]
 
-    #print(df.iloc[0:5, 6:10])
+    # print(df.iloc[0:5, 6:10])
 
     return df
