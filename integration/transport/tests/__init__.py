@@ -42,8 +42,8 @@ class TestTransport(unittest.TestCase):
                    test_pds3_df.iloc[0:49, 3:13], expected_df.iloc[0:49, 3:13]))
 
         # TODO Test the calculations for the first three columnos
-        # self.assertIsNone(test_dataframe(
-        #           test_pds3_df.iloc[3:49, 0:3], expected_df.iloc[3:49, 0:3]))
+        self.assertIsNone(test_dataframe(
+                  test_pds3_df.iloc[0:49, 0:3], expected_df.iloc[0:49, 0:3]))
 
     def test_transport_freight_adoption(self):
         expected_df = pd.read_csv(

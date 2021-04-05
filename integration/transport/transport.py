@@ -197,7 +197,8 @@ def nonurban_pass_adoption(scenario="pds1", include_telepresence=True, include_t
         df['Telepresence'] - df['High Speed Rail'] - \
         df['Electric Vehicles'] - df['Car Fuel Efficiency'] - \
         (df['Average of Baseline TAMs'] * (modeshare[0] +
-         modeshare[1] + df['Efficient Airplanes %']))
+        modeshare[1] + max(df['Efficient Airplanes %'], modeshare[2])))
+    # modeshare[1] + modeshare[2]))
 
     df['Remaining %'] = df['Remaining mtonne-kms'] / \
         df['Average of Baseline TAMs']
