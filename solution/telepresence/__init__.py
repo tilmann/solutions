@@ -6,21 +6,11 @@ import pathlib
 
 import numpy as np
 import pandas as pd
-
 from model import adoptiondata
 from model import advanced_controls as ac
-from model import ch4calcs
-from model import co2calcs
-from model import customadoption
-from model import dd
-from model import emissionsfactors
-from model import firstcost
-from model import helpertables
-from model import operatingcost
-from model import s_curve
-from model import unitadoption
-from model import vma
-from model import tam
+from model import (ch4calcs, co2calcs, customadoption, dd, emissionsfactors,
+                   firstcost, helpertables, operatingcost, s_curve, tam,
+                   unitadoption, vma)
 from solution import rrs
 
 DATADIR = pathlib.Path(__file__).parents[2].joinpath('data')
@@ -30,28 +20,36 @@ VMAs = {
         filename=THISDIR.joinpath("vma_data", "Current_Adoption.csv"),
         use_weight=False),
     'CONVENTIONAL First Cost per Implementation Unit': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "CONVENTIONAL_First_Cost_per_Implementation_Unit.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "CONVENTIONAL_First_Cost_per_Implementation_Unit.csv"),
         use_weight=False),
     'SOLUTION First Cost per Implementation Unit': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "SOLUTION_First_Cost_per_Implementation_Unit.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "SOLUTION_First_Cost_per_Implementation_Unit.csv"),
         use_weight=True),
     'CONVENTIONAL Lifetime Capacity': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "CONVENTIONAL_Lifetime_Capacity.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "CONVENTIONAL_Lifetime_Capacity.csv"),
         use_weight=False),
     'SOLUTION Lifetime Capacity': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "SOLUTION_Lifetime_Capacity.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "SOLUTION_Lifetime_Capacity.csv"),
         use_weight=False),
     'CONVENTIONAL Average Annual Use': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "CONVENTIONAL_Average_Annual_Use.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "CONVENTIONAL_Average_Annual_Use.csv"),
         use_weight=True),
     'SOLUTION Average Annual Use': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "SOLUTION_Average_Annual_Use.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "SOLUTION_Average_Annual_Use.csv"),
         use_weight=True),
     'CONVENTIONAL Variable Operating Cost (VOM) per Functional Unit': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "CONVENTIONAL_Variable_Operating_Cost_VOM_per_Functional_Unit.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "CONVENTIONAL_Variable_Operating_Cost_VOM_per_Functional_Unit.csv"),
         use_weight=True),
     'SOLUTION Variable Operating Cost (VOM) per Functional Unit': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "SOLUTION_Variable_Operating_Cost_VOM_per_Functional_Unit.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "SOLUTION_Variable_Operating_Cost_VOM_per_Functional_Unit.csv"),
         use_weight=False),
     'CONVENTIONAL Fixed Operating Cost (FOM)': vma.VMA(
         filename=None, use_weight=False),
@@ -62,30 +60,36 @@ VMAs = {
     'SOLUTION Energy Efficiency Factor': vma.VMA(
         filename=None, use_weight=False),
     'SOLUTION Total Energy Used per Functional Unit': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "SOLUTION_Total_Energy_Used_per_Functional_Unit.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "SOLUTION_Total_Energy_Used_per_Functional_Unit.csv"),
         use_weight=True),
     'CONVENTIONAL Fuel Consumed per Functional Unit': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "CONVENTIONAL_Fuel_Consumed_per_Functional_Unit.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "CONVENTIONAL_Fuel_Consumed_per_Functional_Unit.csv"),
         use_weight=False),
     'SOLUTION Fuel Efficiency Factor': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "SOLUTION_Fuel_Efficiency_Factor.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "SOLUTION_Fuel_Efficiency_Factor.csv"),
         use_weight=False),
     'CONVENTIONAL Direct Emissions per Functional Unit': vma.VMA(
         filename=None, use_weight=False),
     'SOLUTION Direct Emissions per Functional Unit': vma.VMA(
         filename=None, use_weight=False),
     'CONVENTIONAL Indirect CO2 Emissions per Unit': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "CONVENTIONAL_Indirect_CO2_Emissions_per_Unit.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "CONVENTIONAL_Indirect_CO2_Emissions_per_Unit.csv"),
         use_weight=True),
     'SOLUTION Indirect CO2 Emissions per Unit': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "SOLUTION_Indirect_CO2_Emissions_per_Unit.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "SOLUTION_Indirect_CO2_Emissions_per_Unit.csv"),
         use_weight=True),
     'CH4-CO2eq Tons Reduced': vma.VMA(
         filename=None, use_weight=False),
     'N2O-CO2eq Tons Reduced': vma.VMA(
         filename=None, use_weight=False),
     'Total Number of Air Business Trips Annually': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "Total_Number_of_Air_Business_Trips_Annually.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "Total_Number_of_Air_Business_Trips_Annually.csv"),
         use_weight=False),
     'Share of Business Travel': vma.VMA(
         filename=THISDIR.joinpath("vma_data", "Share_of_Business_Travel.csv"),
@@ -107,10 +111,12 @@ VMAs = {
     'SOLUTION Revenue per Functional Unit': vma.VMA(
         filename=None, use_weight=False),
     'Estimated Rebound/ Induced Demand': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "Estimated_Rebound_Induced_Demand.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "Estimated_Rebound_Induced_Demand.csv"),
         use_weight=False),
 }
-vma.populate_fixed_summaries(vma_dict=VMAs, filename=THISDIR.joinpath('vma_data', 'VMA_info.csv'))
+vma.populate_fixed_summaries(
+    vma_dict=VMAs, filename=THISDIR.joinpath('vma_data', 'VMA_info.csv'))
 
 units = {
     "implementation unit": "Active VC user",
@@ -122,7 +128,8 @@ units = {
 name = 'Videoconferencing and Telepresence'
 solution_category = ac.SOLUTION_CATEGORY.REDUCTION
 
-scenarios = ac.load_scenarios_from_json(directory=THISDIR.joinpath('ac'), vmas=VMAs)
+scenarios = ac.load_scenarios_from_json(
+    directory=THISDIR.joinpath('ac'), vmas=VMAs)
 
 
 class Scenario:
@@ -155,21 +162,21 @@ class Scenario:
             ['low_sd_mult', 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
             ['high_sd_mult', 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]]
         tamconfig = pd.DataFrame(tamconfig_list[1:], columns=tamconfig_list[0],
-            dtype=np.object).set_index('param')
+            dtype=object).set_index('param')
         tam_ref_data_sources = {
               'Baseline Cases': {
                   'Based on: IEA ETP 2016 6DS': THISDIR.joinpath('tam', 'tam_based_on_IEA_ETP_2016_6DS.csv'),
                   'Based on Airbus (2015) Global Market Forecast BUSINESS  Air Travel 2016-2035 with projections extended + Telepresence Adjustment': THISDIR.joinpath('tam', 'tam_based_on_Airbus_2015_Global_Market_Forecast_BUSINESS_Air_Travel_20162035_with_projection_3f506404.csv'),
                   'Based on Boeing (2017) Current Market Outlook BUSINESS  Air Travel 2017-2036 + Telepresence Adjustment': THISDIR.joinpath('tam', 'tam_based_on_Boeing_2017_Current_Market_Outlook_BUSINESS_Air_Travel_20172036_Telepresence_Adjustment.csv'),
-            },
+              },
               'Ambitious Cases': {
                   'Based on: IEA ETP 2016 2DS': THISDIR.joinpath('tam', 'tam_based_on_IEA_ETP_2016_2DS.csv'),
-            },
+              },
         }
         self.tm = tam.TAM(tamconfig=tamconfig, tam_ref_data_sources=tam_ref_data_sources,
             tam_pds_data_sources=tam_ref_data_sources)
-        ref_tam_per_region=self.tm.ref_tam_per_region()
-        pds_tam_per_region=self.tm.pds_tam_per_region()
+        ref_tam_per_region = self.tm.ref_tam_per_region()
+        pds_tam_per_region = self.tm.pds_tam_per_region()
 
         adconfig_list = [
             ['param', 'World', 'OECD90', 'Eastern Europe', 'Asia (Sans Japan)',
@@ -183,7 +190,7 @@ class Scenario:
             ['low_sd_mult', 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
             ['high_sd_mult', 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]]
         adconfig = pd.DataFrame(adconfig_list[1:], columns=adconfig_list[0],
-            dtype=np.object).set_index('param')
+            dtype=object).set_index('param')
         ad_data_sources = {
         }
         self.ad = adoptiondata.AdoptionData(ac=self.ac, data_sources=ad_data_sources,
@@ -196,14 +203,14 @@ class Scenario:
                     "Using Excel's Goal Seek, we fitted a Bass Diffusion Curve's parameters to "
                     'fit this adoption for 2050 - 20%. Some parameter constraints were added as '
                     'guided by the literature on parameter estimations. '
-                    ),
+                ),
                 'filename': THISDIR.joinpath('ca_pds_data', 'custom_pds_ad_PDS1_Bass_diffusion_Adoption_Curve_16_Adoption_in_2050.csv')},
             {'name': 'PDS2 - Bass diffusion Adoption Curve - 30% Adoption in 2050', 'include': True,
                 'description': (
                     "Using Excel's Goal Seek, we fitted a Bass Diffusion Curve's parameters to "
                     'fit the adoption for 2050 at 30%. Some parameter constraints were added as '
                     'guided by the literature on parameter estimations. '
-                    ),
+                ),
                 'filename': THISDIR.joinpath('ca_pds_data', 'custom_pds_ad_PDS2_Bass_diffusion_Adoption_Curve_30_Adoption_in_2050.csv')},
             {'name': 'PDS3 - Bass diffusion Adoption Curve - 50% Adoption in 2050', 'include': True,
                 'description': (
@@ -211,7 +218,7 @@ class Scenario:
                     'fit the maximum potential we believe for Telepresence - 50% of business air '
                     'trips. Some parameter constraints were added as guided by the literature on '
                     'parameter estimations. '
-                    ),
+                ),
                 'filename': THISDIR.joinpath('ca_pds_data', 'custom_pds_ad_PDS3_Bass_diffusion_Adoption_Curve_50_Adoption_in_2050.csv')},
         ]
         self.pds_ca = customadoption.CustomAdoption(data_sources=ca_pds_data_sources,
@@ -230,7 +237,7 @@ class Scenario:
                     'this update, new TAM data were added resulting a different reference '
                     'adoption scenario, so this former reference scenario is stored here for use '
                     'in the Book Ed.1 scenario results. '
-                    ),
+                ),
                 'filename': THISDIR.joinpath('ca_ref_data', 'custom_ref_ad_Book_Ed_1_Reference_Scenario.csv')},
             {'name': 'Telepresence Share of Business Aviation Market is Fixed', 'include': True,
                 'description': (
@@ -240,7 +247,7 @@ class Scenario:
                     'future years, the standard Drawdown assumption of fixed adoption (from '
                     '2018) in percentage of TAM is applied. The TAM used is the average of '
                     "Baseline TAM's. "
-                    ),
+                ),
                 'filename': THISDIR.joinpath('ca_ref_data', 'custom_ref_ad_Telepresence_Share_of_Business_Aviation_Market_is_Fixed.csv')},
         ]
         self.ref_ca = customadoption.CustomAdoption(data_sources=ca_ref_data_sources,
@@ -277,7 +284,8 @@ class Scenario:
         ht_pds_adoption_final_percentage = pd.Series(
             list(self.ac.pds_adoption_final_percentage.values()),
             index=list(self.ac.pds_adoption_final_percentage.keys()))
-        ht_pds_adoption_final = ht_pds_adoption_final_percentage * pds_tam_per_region.loc[2050]
+        ht_pds_adoption_final = ht_pds_adoption_final_percentage * \
+            pds_tam_per_region.loc[2050]
         ht_pds_datapoints = pd.DataFrame(columns=dd.REGIONS)
         ht_pds_datapoints.loc[2018] = ht_pds_adoption_initial
         ht_pds_datapoints.loc[2050] = ht_pds_adoption_final.fillna(0.0)
@@ -291,7 +299,8 @@ class Scenario:
             pds_adoption_trend_per_region=pds_adoption_trend_per_region,
             pds_adoption_is_single_source=pds_adoption_is_single_source)
 
-        self.ef = emissionsfactors.ElectricityGenOnGrid(ac=self.ac, grid_emissions_version=3)
+        self.ef = emissionsfactors.ElectricityGenOnGrid(
+            ac=self.ac, grid_emissions_version=3)
 
         self.ua = unitadoption.UnitAdoption(ac=self.ac,
             ref_total_adoption_units=ref_tam_per_region,
@@ -302,7 +311,7 @@ class Scenario:
         soln_pds_tot_iunits_reqd = self.ua.soln_pds_tot_iunits_reqd()
         soln_ref_tot_iunits_reqd = self.ua.soln_ref_tot_iunits_reqd()
         conv_ref_tot_iunits = self.ua.conv_ref_tot_iunits()
-        soln_net_annual_funits_adopted=self.ua.soln_net_annual_funits_adopted()
+        soln_net_annual_funits_adopted = self.ua.soln_net_annual_funits_adopted()
 
         self.fc = firstcost.FirstCost(ac=self.ac, pds_learning_increase_mult=2,
             ref_learning_increase_mult=2, conv_learning_increase_mult=2,
@@ -348,4 +357,3 @@ class Scenario:
         self.r2s = rrs.RRS(total_energy_demand=ref_tam_per_region.loc[2014, 'World'],
             soln_avg_annual_use=self.ac.soln_avg_annual_use,
             conv_avg_annual_use=self.ac.conv_avg_annual_use)
-

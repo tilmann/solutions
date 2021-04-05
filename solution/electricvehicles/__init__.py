@@ -7,22 +7,11 @@ import pathlib
 import numpy as np
 import pandas as pd
 import xlrd
-
 from model import adoptiondata
 from model import advanced_controls as ac
-from model import ch4calcs
-from model import co2calcs
-from model import customadoption
-from model import dd
-from model import emissionsfactors
-from model import firstcost
-from model import helpertables
-from model import interpolation
-from model import operatingcost
-from model import s_curve
-from model import unitadoption
-from model import vma
-from model import tam
+from model import (ch4calcs, co2calcs, customadoption, dd, emissionsfactors,
+                   firstcost, helpertables, interpolation, operatingcost,
+                   s_curve, tam, unitadoption, vma)
 from solution import rrs
 
 DATADIR = pathlib.Path(__file__).parents[2].joinpath('data')
@@ -32,57 +21,72 @@ VMAs = {
         filename=THISDIR.joinpath("vma_data", "Current_Adoption.csv"),
         use_weight=False),
     'CONVENTIONAL First Cost per Implementation Unit': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "CONVENTIONAL_First_Cost_per_Implementation_Unit.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "CONVENTIONAL_First_Cost_per_Implementation_Unit.csv"),
         use_weight=True),
     'SOLUTION First Cost per Implementation Unit': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "SOLUTION_First_Cost_per_Implementation_Unit.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "SOLUTION_First_Cost_per_Implementation_Unit.csv"),
         use_weight=True),
     'CONVENTIONAL Lifetime Capacity': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "CONVENTIONAL_Lifetime_Capacity.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "CONVENTIONAL_Lifetime_Capacity.csv"),
         use_weight=False),
     'SOLUTION Lifetime Capacity': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "SOLUTION_Lifetime_Capacity.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "SOLUTION_Lifetime_Capacity.csv"),
         use_weight=False),
     'CONVENTIONAL Average Annual Use': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "CONVENTIONAL_Average_Annual_Use.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "CONVENTIONAL_Average_Annual_Use.csv"),
         use_weight=False),
     'SOLUTION Average Annual Use': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "SOLUTION_Average_Annual_Use.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "SOLUTION_Average_Annual_Use.csv"),
         use_weight=False),
     'CONVENTIONAL Variable Operating Cost (VOM) per Functional Unit': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "CONVENTIONAL_Variable_Operating_Cost_VOM_per_Functional_Unit.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "CONVENTIONAL_Variable_Operating_Cost_VOM_per_Functional_Unit.csv"),
         use_weight=False),
     'SOLUTION Variable Operating Cost (VOM) per Functional Unit': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "SOLUTION_Variable_Operating_Cost_VOM_per_Functional_Unit.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "SOLUTION_Variable_Operating_Cost_VOM_per_Functional_Unit.csv"),
         use_weight=True),
     'CONVENTIONAL Fixed Operating Cost (FOM)': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "CONVENTIONAL_Fixed_Operating_Cost_FOM.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "CONVENTIONAL_Fixed_Operating_Cost_FOM.csv"),
         use_weight=False),
     'SOLUTION Fixed Operating Cost (FOM)': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "SOLUTION_Fixed_Operating_Cost_FOM.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "SOLUTION_Fixed_Operating_Cost_FOM.csv"),
         use_weight=False),
     'CONVENTIONAL Total Energy Used per Functional Unit': vma.VMA(
         filename=None, use_weight=False),
     'SOLUTION Energy Efficiency Factor': vma.VMA(
         filename=None, use_weight=False),
     'SOLUTION Total Energy Used per Functional Unit': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "SOLUTION_Total_Energy_Used_per_Functional_Unit.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "SOLUTION_Total_Energy_Used_per_Functional_Unit.csv"),
         use_weight=True),
     'CONVENTIONAL Fuel Consumed per Functional Unit': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "CONVENTIONAL_Fuel_Consumed_per_Functional_Unit.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "CONVENTIONAL_Fuel_Consumed_per_Functional_Unit.csv"),
         use_weight=False),
     'SOLUTION Fuel Efficiency Factor': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "SOLUTION_Fuel_Efficiency_Factor.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "SOLUTION_Fuel_Efficiency_Factor.csv"),
         use_weight=True),
     'CONVENTIONAL Direct Emissions per Functional Unit': vma.VMA(
         filename=None, use_weight=False),
     'SOLUTION Direct Emissions per Functional Unit': vma.VMA(
         filename=None, use_weight=False),
     'CONVENTIONAL Indirect CO2 Emissions per Unit': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "CONVENTIONAL_Indirect_CO2_Emissions_per_Unit.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "CONVENTIONAL_Indirect_CO2_Emissions_per_Unit.csv"),
         use_weight=False),
     'SOLUTION Indirect CO2 Emissions per Unit': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "SOLUTION_Indirect_CO2_Emissions_per_Unit.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "SOLUTION_Indirect_CO2_Emissions_per_Unit.csv"),
         use_weight=True),
     'CH4-CO2eq Tons Reduced': vma.VMA(
         filename=None, use_weight=False),
@@ -92,26 +96,30 @@ VMAs = {
         filename=THISDIR.joinpath("vma_data", "SOLUTION_Car_Occupancy.csv"),
         use_weight=False),
     'Fraction of BEV+PHEV market that is BEV': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "Fraction_of_BEV_PHEV_market_that_is_BEV.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "Fraction_of_BEV_PHEV_market_that_is_BEV.csv"),
         use_weight=False),
     'Discount Rates - Households': vma.VMA(
         filename=THISDIR.joinpath("vma_data", "Discount_Rates_Households.csv"),
         use_weight=False),
     'CONVENTIONAL Car Occupancy': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "CONVENTIONAL_Car_Occupancy.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "CONVENTIONAL_Car_Occupancy.csv"),
         use_weight=False),
     'EV Learning Rate': vma.VMA(
         filename=THISDIR.joinpath("vma_data", "EV_Learning_Rate.csv"),
         use_weight=False),
     'Average Annual EV Car Vehicle km': vma.VMA(
-        filename=THISDIR.joinpath("vma_data", "Average_Annual_EV_Car_Vehicle_km.csv"),
+        filename=THISDIR.joinpath(
+            "vma_data", "Average_Annual_EV_Car_Vehicle_km.csv"),
         use_weight=False),
     'CONVENTIONAL Revenue per Functional Unit': vma.VMA(
         filename=None, use_weight=False),
     'SOLUTION Revenue per Functional Unit': vma.VMA(
         filename=None, use_weight=False),
 }
-vma.populate_fixed_summaries(vma_dict=VMAs, filename=THISDIR.joinpath('vma_data', 'VMA_info.csv'))
+vma.populate_fixed_summaries(
+    vma_dict=VMAs, filename=THISDIR.joinpath('vma_data', 'VMA_info.csv'))
 
 units = {
     "implementation unit": "vehicle",
@@ -123,7 +131,8 @@ units = {
 name = 'Electric Vehicles'
 solution_category = ac.SOLUTION_CATEGORY.REDUCTION
 
-scenarios = ac.load_scenarios_from_json(directory=THISDIR.joinpath('ac'), vmas=VMAs)
+scenarios = ac.load_scenarios_from_json(
+    directory=THISDIR.joinpath('ac'), vmas=VMAs)
 
 
 class Scenario:
@@ -156,23 +165,23 @@ class Scenario:
             ['low_sd_mult', 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
             ['high_sd_mult', 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]]
         tamconfig = pd.DataFrame(tamconfig_list[1:], columns=tamconfig_list[0],
-            dtype=np.object).set_index('param')
+            dtype=object).set_index('param')
         tam_ref_data_sources = {
               'Baseline Cases': {
                   'Based on IEA (2016), "Energy Technology Perspectives - 6DS", IEA/OECD': THISDIR.joinpath('tam', 'tam_based_on_IEA_2016_Energy_Technology_Perspectives_6DS_IEAOECD.csv'),
                   'Based on ICCT (2012) "Global Transport Roadmap Model", http://www.theicct.org/global-transportation-roadmap-model': THISDIR.joinpath('tam', 'tam_based_on_ICCT_2012_Global_Transport_Roadmap_Model_httpwww_theicct_orgglobaltransportatio_8916596a.csv'),
-            },
+              },
               'Conservative Cases': {
                   'Based on IEA (2016), "Energy Technology Perspectives - 4DS", IEA/OECD': THISDIR.joinpath('tam', 'tam_based_on_IEA_2016_Energy_Technology_Perspectives_4DS_IEAOECD.csv'),
-            },
+              },
               'Ambitious Cases': {
                   'Based on IEA (2016), "Energy Technology Perspectives - 2DS", IEA/OECD': THISDIR.joinpath('tam', 'tam_based_on_IEA_2016_Energy_Technology_Perspectives_2DS_IEAOECD.csv'),
-            },
+              },
         }
         self.tm = tam.TAM(tamconfig=tamconfig, tam_ref_data_sources=tam_ref_data_sources,
             tam_pds_data_sources=tam_ref_data_sources)
-        ref_tam_per_region=self.tm.ref_tam_per_region()
-        pds_tam_per_region=self.tm.pds_tam_per_region()
+        ref_tam_per_region = self.tm.ref_tam_per_region()
+        pds_tam_per_region = self.tm.pds_tam_per_region()
 
         adconfig_list = [
             ['param', 'World', 'OECD90', 'Eastern Europe', 'Asia (Sans Japan)',
@@ -186,7 +195,7 @@ class Scenario:
             ['low_sd_mult', 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
             ['high_sd_mult', 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]]
         adconfig = pd.DataFrame(adconfig_list[1:], columns=adconfig_list[0],
-            dtype=np.object).set_index('param')
+            dtype=object).set_index('param')
         ad_data_sources = {
             'Baseline Cases': {
                 'Based on IEA Reference Tech Scenario- 2017': THISDIR.joinpath('ad', 'ad_based_on_IEA_Reference_Tech_Scenario_2017.csv'),
@@ -207,7 +216,8 @@ class Scenario:
         # Custom PDS Data
 
         # Data about EV Sales comes from sheets from the original Excel implementation
-        wb = xlrd.open_workbook(filename=THISDIR.joinpath('electricvehicledata.xlsx'))
+        wb = xlrd.open_workbook(
+            filename=THISDIR.joinpath('electricvehicledata.xlsx'))
         raw_sales = pd.read_excel(io=wb, sheet_name='EV Sales', header=0, index_col=0,
                 usecols='A:K', dtype='float', engine='xlrd', skiprows=7, nrows=43)
         ev_sales = raw_sales.rename(axis='columns', mapper={
@@ -219,7 +229,8 @@ class Scenario:
         sales_extended = ev_sales.copy()
         for year in range(2051, 2061):
             sales_extended.loc[year, :] = 0.0
-        vehicle_retirements = sales_extended.shift(periods=lifetime, fill_value=0.0)
+        vehicle_retirements = sales_extended.shift(
+            periods=lifetime, fill_value=0.0)
         ev_stock = (ev_sales - vehicle_retirements).cumsum()
         pass_km_adoption = ev_stock * self.ac.soln_avg_annual_use
 
@@ -229,12 +240,15 @@ class Scenario:
         predict = pd.Series([16.7014449161593, 35.1749574468086, 49.2449404255312,
                 635.494231205675, 2239.47229078014, 5072.22886382977],
                 index=[2014, 2015, 2016, 2020, 2025, 2030])
-        pass_km_predicted = interpolation.poly_degree3_trend(predict)['adoption']
+        pass_km_predicted = interpolation.poly_degree3_trend(predict)[
+                                                             'adoption']
         pass_km_predicted.update(predict)
         integration_pds2 = pd.read_csv(THISDIR.joinpath('tam', 'integration_PDS2.csv'),
                 skipinitialspace=True, comment='#', index_col=0)
-        tam_limit_pds2 = integration_pds2['URBAN'] + (0.3 * integration_pds2['NONURBAN'])
-        world = pd.concat([pass_km_adoption.loc[2012:2019, 'World'], pass_km_predicted.loc[2020:]])
+        tam_limit_pds2 = integration_pds2['URBAN'] + \
+            (0.3 * integration_pds2['NONURBAN'])
+        world = pd.concat(
+            [pass_km_adoption.loc[2012:2019, 'World'], pass_km_predicted.loc[2020:]])
         ds1_df = pd.DataFrame(0, columns=dd.REGIONS, index=range(2012, 2061))
         ds1_df['World'] = world.clip(upper=tam_limit_pds2, axis=0)
 
@@ -243,15 +257,20 @@ class Scenario:
                 usecols='D:AR', dtype='float', engine='xlrd', skiprows=8, nrows=5).T
         survival_ds2 = pd.concat([ev_stock.loc[:2019, 'World'], raw[3]])
         capture_pct_ds2 = raw[4]
-        car_usage = 15765.0  # https://theicct.org/global-transportation-roadmap-model (now 404s)
-        car_occupancy = self.ac.lookup_vma(vma_title='Current Average Car Occupancy')
+        # https://theicct.org/global-transportation-roadmap-model (now 404s)
+        car_usage = 15765.0
+        car_occupancy = self.ac.lookup_vma(
+            vma_title='Current Average Car Occupancy')
         survival_ad_ds2 = survival_ds2 * car_usage * car_occupancy / 1e9
-        replace_ds2 = (survival_ds2 * capture_pct_ds2).cumsum().subtract(vehicle_retirements['World'], fill_value=0.0)
+        replace_ds2 = (survival_ds2 * capture_pct_ds2).cumsum().subtract(
+            vehicle_retirements['World'], fill_value=0.0)
         pass_km_potential_ds2 = replace_ds2 * self.ac.conv_avg_annual_use
-        adoption_ds2 = pd.concat([survival_ad_ds2.loc[:2019], pass_km_potential_ds2.loc[2020:]])
+        adoption_ds2 = pd.concat(
+            [survival_ad_ds2.loc[:2019], pass_km_potential_ds2.loc[2020:]])
         integration_pds3 = pd.read_csv(THISDIR.joinpath('tam', 'integration_PDS3.csv'),
                 skipinitialspace=True, comment='#', index_col=0)
-        tam_limit_pds3 = integration_pds3['URBAN'] + (0.3 * integration_pds3['NONURBAN'])
+        tam_limit_pds3 = integration_pds3['URBAN'] + \
+            (0.3 * integration_pds3['NONURBAN'])
         ds2_df = pd.DataFrame(0, columns=dd.REGIONS, index=range(2012, 2061))
         ds2_df['World'] = adoption_ds2.clip(upper=tam_limit_pds3, axis=0)
 
@@ -267,7 +286,7 @@ class Scenario:
                     'year after higher priority solutions have supplied their full projection in '
                     'PDS2 (Higher priority solutions are: Walkable Cities, Bike Infrastructure, '
                     'E-Bikes, Mass Transit and Carsharing/Ridesharing) '
-                    ),
+                ),
                 'dataframe': ds1_df},
             {'name': 'PDS3-Based on Replacing All Retired Cars from Survival Analysis', 'include': True,
                 'description': (
@@ -286,14 +305,14 @@ class Scenario:
                     'after higher priority solutions have supplied their full projection in PDS3 '
                     '(Higher priority solutions are: Walkable Cities, Bike Infrastructure, '
                     'E-Bikes, Mass Transit and Carsharing/Ridesharing) '
-                    ),
+                ),
                 'dataframe': ds2_df},
             {'name': 'Book Ed.1 Scenario 1', 'include': False,
                 'description': (
                     'Starting with the IEA 2DS Projection of EV in the Global stock, we '
                     'interpolate and apply a fixed car occupancy to 2050. Minor adjustments are '
                     'made to early years to ensure smoothness of the adoption curve. '
-                    ),
+                ),
                 'filename': THISDIR.joinpath('ca_pds_data', 'custom_pds_ad_Book_Ed_1_Scenario_1.csv')},
             {'name': 'Book Ed.1 Scenario 2', 'include': False,
                 'description': (
@@ -302,7 +321,7 @@ class Scenario:
                     "ICCT's global car occupancy average and a 50% growth in this occupancy by "
                     '2050, we estimate the total passenger-km of EV during the period of '
                     'analysis. '
-                    ),
+                ),
                 'filename': THISDIR.joinpath('ca_pds_data', 'custom_pds_ad_Book_Ed_1_Scenario_2.csv')},
             {'name': 'Book Ed.1 Scenario 3', 'include': False,
                 'description': (
@@ -310,7 +329,7 @@ class Scenario:
                     "sales' growth, we project the sales and then global EV stock. Assuming "
                     "twice the ICCT's global car occupancy average, we estimate the total "
                     "passenger-km of EV during the period of analysis. "
-                    ),
+                ),
                 'filename': THISDIR.joinpath('ca_pds_data', 'custom_pds_ad_Book_Ed_1_Scenario_3.csv')},
         ]
         self.pds_ca = customadoption.CustomAdoption(data_sources=ca_pds_data_sources,
@@ -345,7 +364,8 @@ class Scenario:
         ht_pds_adoption_final_percentage = pd.Series(
             list(self.ac.pds_adoption_final_percentage.values()),
             index=list(self.ac.pds_adoption_final_percentage.keys()))
-        ht_pds_adoption_final = ht_pds_adoption_final_percentage * pds_tam_per_region.loc[2050]
+        ht_pds_adoption_final = ht_pds_adoption_final_percentage * \
+            pds_tam_per_region.loc[2050]
         ht_pds_datapoints = pd.DataFrame(columns=dd.REGIONS)
         ht_pds_datapoints.loc[2018] = ht_pds_adoption_initial
         ht_pds_datapoints.loc[2050] = ht_pds_adoption_final.fillna(0.0)
@@ -358,7 +378,8 @@ class Scenario:
             pds_adoption_trend_per_region=pds_adoption_trend_per_region,
             pds_adoption_is_single_source=pds_adoption_is_single_source)
 
-        self.ef = emissionsfactors.ElectricityGenOnGrid(ac=self.ac, grid_emissions_version=3)
+        self.ef = emissionsfactors.ElectricityGenOnGrid(
+            ac=self.ac, grid_emissions_version=3)
 
         self.ua = unitadoption.UnitAdoption(ac=self.ac,
             ref_total_adoption_units=ref_tam_per_region,
@@ -370,7 +391,7 @@ class Scenario:
         soln_pds_tot_iunits_reqd = self.ua.soln_pds_tot_iunits_reqd()
         soln_ref_tot_iunits_reqd = self.ua.soln_ref_tot_iunits_reqd()
         conv_ref_tot_iunits = self.ua.conv_ref_tot_iunits()
-        soln_net_annual_funits_adopted=self.ua.soln_net_annual_funits_adopted()
+        soln_net_annual_funits_adopted = self.ua.soln_net_annual_funits_adopted()
 
         self.fc = firstcost.FirstCost(ac=self.ac, pds_learning_increase_mult=2,
             ref_learning_increase_mult=2, conv_learning_increase_mult=2,
@@ -416,4 +437,3 @@ class Scenario:
         self.r2s = rrs.RRS(total_energy_demand=ref_tam_per_region.loc[2014, 'World'],
             soln_avg_annual_use=self.ac.soln_avg_annual_use,
             conv_avg_annual_use=self.ac.conv_avg_annual_use)
-
