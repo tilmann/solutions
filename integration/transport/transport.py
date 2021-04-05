@@ -70,40 +70,12 @@ def freight_adoption(scenario):
              'Trucks', 'Trucks %', 'Ships', 'Ships %', 'Trains', 'Trains %']]
     return df
 
-
-# PDS_scenarios = [scenario_PDS1, scenario_PDS2, scenario_PDS3]
-
-# for s, i in zip(PDS_scenarios, range(1, 4)):
-#     trucks = solutions_dict["trucks"][0](s[0])
-#     ships = solutions_dict["ships"][0](s[1])
-#     trains = solutions_dict["trains"][0](s[2])
-
-#     ship_vals = ships.ht.pds_adoption_data_per_region['World']
-#     truck_vals = trucks.ht.pds_adoption_data_per_region['World']
-#     train_vals = trains.ht.pds_adoption_data_per_region['World']
-
-#     df = pd.concat([truck_vals, ship_vals, train_vals], axis=1)
-#     df.to_csv(f'PDS_{i}.csv')
-
-# telepresence = solutions_dict["telepresence"][0]()
-# electricvehicles = solutions_dict["electricvehicles"][0]()
-# airplanes = solutions_dict["airplanes"][0]()
-# hybridcars = solutions_dict["hybridcars"][0]()
-
-# ship_vals = ships.ht.pds_adoption_data_per_region['World']
-# truck_vals = trucks.ht.pds_adoption_data_per_region['World']
-# train_vals = trains.ht.pds_adoption_data_per_region['World']
-# telepresence_vals = telepresence.ht.pds_adoption_data_per_region['World']
-# electricvehicles_vals = electricvehicles.ht.pds_adoption_data_per_region['World']
-# telepresence_vals = telepresence.ht.pds_adoption_data_per_region['World']
-# airplanes_vals = airplanes.ht.pds_adoption_data_per_region['World']
-# hybridcars_vals = hybridcars.ht.pds_adoption_data_per_region['World']
-
-
 # Intercity Rail Share: 10.51%
 # Intercity Bus Share: 28.15%
 # Total Aviation Share: 21.38%
 # modeshare = [10.51, 28.15, 21.38]
+
+
 def nonurban_pass_adoption(scenario="pds1", include_telepresence=True, include_trains=True, include_electricvehicles=True, include_hybridcars=True, modeshare=[0.1051, 0.2815, 0.2138]):
 
     scenarios_dict = {
@@ -148,21 +120,20 @@ def nonurban_pass_adoption(scenario="pds1", include_telepresence=True, include_t
 
     telepresence_vals = telepresence.ht.pds_adoption_data_per_region['World']
     # TODO Figure out why the solutions output need a factor
-
     telepresence_vals = telepresence_vals / 1000000000
 
     trains_vals = trains.ht.pds_adoption_data_per_region['World']
-    # TODO see above
+    # TODO Figure out why the solutions output need a factor
     trains_vals = trains_vals / 10000
 
     airplanes_vals = airplanes.ht.pds_adoption_data_per_region['World']
 
     electricvehicles_vals = electricvehicles.ht.pds_adoption_data_per_region['World']
-    # TODO see above
+    # TODO Figure out why the solutions output need a factor
     electricvehicles_vals = electricvehicles_vals / 10
 
     hybridcars_vals = hybridcars.ht.pds_adoption_data_per_region['World']
-    # TODO see above
+    # TODO Figure out why the solutions output need a factor
     hybridcars_vals = hybridcars_vals / 1000000000
 
     df = pd.concat([baseline_nonurban_df, telepresence_vals, trains_vals, airplanes_vals,
@@ -192,14 +163,12 @@ def nonurban_pass_adoption(scenario="pds1", include_telepresence=True, include_t
     if not include_hybridcars:
         df['Car Fuel Efficiency'] = 0
 
-    # TODO the MAX in C8 (=B8-SUM($AA$3:$AA$4;MAX($AA$5;$N8))*B8-...)) is missing
     df['Remaining mtonne-kms'] = df['Average of Baseline TAMs'] - \
         df['Telepresence'] - df['High Speed Rail'] - \
         df['Electric Vehicles'] - df['Car Fuel Efficiency'] - \
         (df['Average of Baseline TAMs'] * (modeshare[0] +
         modeshare[1] +
             df['Efficient Airplanes %'].map(lambda x: max(x, modeshare[2]))))
-    # modeshare[1] + modeshare[2]))
 
     df['Remaining %'] = df['Remaining mtonne-kms'] / \
         df['Average of Baseline TAMs']

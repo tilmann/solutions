@@ -20,19 +20,12 @@ class TestTransport(unittest.TestCase):
         expected_df = pd.read_csv(
                 'integration/transport/tests/expected_nonurban_pass_pds3.csv', header=None)
 
+        # Make sure every scenario returns a data frame
         test_pds1_df = transport.nonurban_pass_adoption('pds1')
         self.assertIsInstance(test_pds1_df, pd.DataFrame)
-        print('⚠️ Only asserts that it return a valid dataframe')
-        # self.assertIsNone(test_dataframe(
-        #         test_pds1_df.iloc[:, 0:13], expected_df.iloc[0:49, 0:13]))
 
         test_pds2_df = transport.nonurban_pass_adoption('pds2')
         self.assertIsInstance(test_pds2_df, pd.DataFrame)
-        print('⚠️ Only asserts that it return a valid dataframe')
-        # TODO assert the test_dataframe for pds2
-        # currently the df is exported for the
-        # self.assertIsNone(test_dataframe(
-        #        test_pds1_df.iloc[:, 0:13], expected_df.iloc[49:98, 0:13]))
 
         test_pds3_df = transport.nonurban_pass_adoption('pds3')
         self.assertIsInstance(test_pds3_df, pd.DataFrame)
