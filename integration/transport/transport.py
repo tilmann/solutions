@@ -1,4 +1,5 @@
 import pandas as pd
+from integration.transport.tam import average_tam
 from solution import factory
 
 solutions_list = ["trucks", "trains", "ships", "telepresence",
@@ -7,6 +8,7 @@ solutions_dict = {}
 for s in solutions_list:
     solutions_dict[s] = factory.one_solution_scenarios(s)
 
+
 # copied from excel
 baseline_values_freight = [[111304101], [114809282], [119293206], [121312310], [125320334], [130995519], [135887669], [139263493], [143439617], [149227058], [154566203], [160166726], [166046016], [172231911], [178710364], [185530068], [192697916], [200231267], [206140575], [216463901], [225197889], [234366816], [243988062], [254040124], [
     264657000], [275739405], [287343597], [299486959], [313232199], [325460675], [339325731], [353799349], [368898825], [384653303], [401044573], [418125492], [435901525], [454389978], [473476431], [493573367], [514302927], [535814049], [558123920], [581249753], [605208827], [630018479], [655696059], [682258946], [709724529]]
@@ -14,12 +16,8 @@ baseline_values_freight = [[111304101], [114809282], [119293206], [121312310], [
 baseline_freight_df = pd.DataFrame(baseline_values_freight, columns=[
                            'Average of Baseline TAMs'], index=range(2012, 2061))
 
-# copied from excel
-baseline_values_nonurban = [[23943.64424], [24731.13681], [25632.8198], [26367.58211], [27347.95806], [28227.05545], [29120.75615], [30029.15318], [31242.43199], [31890.71249], [32844.48161], [33814.04634], [34799.80151], [35904.38986], [36821.36895], [37857.82772], [38911.86376], [39983.84117], [41070.68283], [42183.07326], [43311.04566], [44458.4265], [45625.61], [46660.52451], [
-    48020.9244], [49249.78991], [50499.97653], [51771.88476], [52995.93906], [54382.4083], [55721.74792], [57084.24055], [58470.18028], [59970.38757], [61313.61043], [62771.7485], [64254.58349], [65762.41404], [67292.90359], [68854.2581], [70438.88122], [72049.58896], [73686.5207], [75349.85195], [77039.83972], [78756.81676], [80501.12936], [82273.16715], [84073.32761]]
-
-baseline_nonurban_df = pd.DataFrame(baseline_values_nonurban, columns=[
-                           'Average of Baseline TAMs'], index=range(2012, 2061))
+baseline_nonurban_df = average_tam("tam_ETP_2016_URBAN_6_DS_Nonmotorized_Travel_Adjustment",
+            "tam_ICCT_2012_Global_Transportation_Roadmap_Model_Nonmotorized_Travel_Adjustment")
 
 
 def freight_adoption(scenario):
@@ -70,13 +68,12 @@ def freight_adoption(scenario):
              'Trucks', 'Trucks %', 'Ships', 'Ships %', 'Trains', 'Trains %']]
     return df
 
-# Intercity Rail Share: 10.51%
-# Intercity Bus Share: 28.15%
-# Total Aviation Share: 21.38%
-# modeshare = [10.51, 28.15, 21.38]
-
 
 def nonurban_pass_adoption(scenario="pds1", include_telepresence=True, include_trains=True, include_electricvehicles=True, include_hybridcars=True, modeshare=[0.1051, 0.2815, 0.2138]):
+    # Intercity Rail Share: 10.51%
+    # Intercity Bus Share: 28.15%
+    # Total Aviation Share: 21.38%
+    # modeshare = [10.51, 28.15, 21.38]
 
     scenarios_dict = {
             # plausible
