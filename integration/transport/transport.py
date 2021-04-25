@@ -87,8 +87,7 @@ def nonurban_pass_adoption(scenario="pds1", include_telepresence=True, include_t
             # drawdown
             'pds2': {
                 'telepresence': 'PDS2-28p2050-Bass Curve Fit',
-                # TODO trains key "PDS2-5p2050-based on on IEA 2DS (Book Ed.1)" did NOT work
-                'trains': 'PDS2-8p2050-with IEA 2DS',
+                'trains': 'PDS2-5p2050-based on on IEA 2DS (Book Ed.1)',
                 'airplanes': 'PDS2-85p2050-18%Efficiency',
                 'electricvehicles': 'PDS2-23p2050-using IEA B2DS (Pre-Integration)',
                 'hybridcars': 'PDS2-4p2050-Transition to EVs (Pre-Integration)',
@@ -98,10 +97,8 @@ def nonurban_pass_adoption(scenario="pds1", include_telepresence=True, include_t
                 'telepresence': 'PDS3-46p2050-Bass Curve Fit',
                 'trains': 'PDS3-9p2050-Complete Electrification',
                 'airplanes': 'PDS3-100p2050-20%Efficiency',
-                # TODO electricvehicles: Key 'PDS3-18p2050-Car Survival Analysis (Pre-Integration)' did NOT work
-                'electricvehicles': 'PDS3-18p2050-Car Survival Analysis',
-                # TODO hybridcars: Key 'PPDS3-1p2050-Transition to EVs (Pre-Integration)' did NOT work
-                'hybridcars': 'PDS3-0p2050-Transition to EV\'s',
+                'electricvehicles': 'PDS3-18p2050-Car Survival Analysis (Pre-Integration)',
+                'hybridcars': 'PDS3-1p2050-Transition to EVs (Pre-Integration)',
             }
     }
 
